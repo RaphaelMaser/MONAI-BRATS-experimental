@@ -16,7 +16,7 @@ model = SwinUNETR(
 )
 
 inference = SlidingWindowInferer(
-    roi_size=(240, 240, 160),
+    roi_size=(192, 192, 96),
     sw_batch_size=1,
     overlap=0.5,
 )
