@@ -19,9 +19,6 @@ import argparse
 from utils.transforms import train_transform, val_transform, post_trans
 from utils.model import inference, model
 
-from ignite.contrib.metrics import GpuInfo
-from ignite.contrib.handlers.tqdm_logger import ProgressBar
-
 set_determinism(seed=0)
 
 # Parsing arguments (epochs, number of folds, validation fold)
@@ -122,14 +119,8 @@ trainer = SupervisedTrainer(
     network=model,
     optimizer=optimizer,
     loss_function=loss_function,
-    inferer=inference,
+    #inferer=inference,
 )
-
-# Default GPU measurements
-GpuInfo().attach(trainer, name='gpu')  # metric names are 'gpu:X mem(%)', 'gpu:X util(%)'
-
-# Logging with TQDM
-ProgressBar(persist=True).attach(trainer, metric_names=['gpu:0 mem(%)', 'gpu:0 util(%)'])
 
 # Metrics for later use
 metric_values = []
