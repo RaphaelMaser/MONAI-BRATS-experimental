@@ -100,14 +100,14 @@ dice_metric = DiceMetric(include_background=True, reduction="mean")
 dice_metric_batch = DiceMetric(include_background=True, reduction="mean_batch")
 
 # Learning Rate Finder tries to find the optimal learning rate for the task in a pre-training epoch
-lr_finder = LearningRateFinder(model=model, optimizer=optimizer, criterion=loss_function, device=device)
-lr_finder.range_test(train_loader=train_loader, start_lr=1e-5, end_lr=10, num_iter=100)
-lr, _ = lr_finder.get_steepest_gradient()
-print(f"Optimal learning rate found: lr=", lr)
-lr_finder.reset()
+# lr_finder = LearningRateFinder(model=model, optimizer=optimizer, criterion=loss_function, device=device)
+# lr_finder.range_test(train_loader=train_loader, start_lr=1e-5, end_lr=10, num_iter=100)
+# lr, _ = lr_finder.get_steepest_gradient()
+# print(f"Optimal learning rate found: lr=", lr)
+# lr_finder.reset()
 
 # Initialize new optimizer with found parameters
-optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+# optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
 # Cosine annealing
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
@@ -120,7 +120,7 @@ trainer = SupervisedTrainer(
     network=model,
     optimizer=optimizer,
     loss_function=loss_function,
-    amp=True,
+    #amp=True,
 )
 
 # Metrics for later use
