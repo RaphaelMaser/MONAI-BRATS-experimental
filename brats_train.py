@@ -19,6 +19,8 @@ import argparse
 from utils.transforms import train_transform, val_transform, post_trans
 from utils.model import inference, model
 
+set_determinism(seed=0)
+
 # Parsing arguments (epochs, number of folds, validation fold)
 parser = argparse.ArgumentParser()
 parser.add_argument('--nfolds', action="store", type=int, dest="nfolds", help="Define the number of folds for cross-validation")
@@ -41,8 +43,6 @@ os.makedirs(output_dir, exist_ok=True)
 os.makedirs(model_dir, exist_ok=True)
 os.makedirs(metrics_dir, exist_ok=True)
 
-set_determinism(seed=0)
-
 
 # Loop fixes the md5 checksum error
 # In the job array all jobs try to download and access the same file, this leads to errors sometimes
@@ -57,7 +57,8 @@ for i in range(100):
             task="Task01_BrainTumour",
             section="training",
             download=True,
-            cache_rate=0.0
+            cache_rate=1.0,
+            seed=0
         )
     except:
         time.sleep(60)
@@ -99,13 +100,13 @@ dice_metric = DiceMetric(include_background=True, reduction="mean")
 dice_metric_batch = DiceMetric(include_background=True, reduction="mean_batch")
 
 # Learning Rate Finder tries to find the optimal learning rate for the task in a pre-training epoch
-lr_finder = LearningRateFinder(model=deepcopy(model), optimizer=optimizer, criterion=deepcopy(loss_function), device=device)
-lr_finder.range_test(train_loader=deepcopy(train_loader), start_lr=1e-5, end_lr=1, num_iter=100)
-lr, _ = lr_finder.get_steepest_gradient()
-print(f"Optimal learning rate found: lr=", lr)
-
+# lr_finder = LearningRateFinder(model=deepcopy(model), optimizer=optimizer, criterion=deepcopy(loss_function), device=device)
+# lr_finder.range_test(train_loader=deepcopy(train_loader), start_lr=1e-5, end_lr=1, num_iter=100)
+# lr, _ = lr_finder.get_steepest_gradient()
+# print(f"Optimal learning rate found: lr=", lr)
+#
 # Initialize new optimizer with found parameters
-optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+# optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
 # Cosine annealing
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
