@@ -10,6 +10,7 @@ model = SegResNet(
     dropout_prob=0.2,
 )
 
+
 inference = SlidingWindowInferer(
     roi_size=(240, 240, 160),
     sw_batch_size=1,
