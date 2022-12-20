@@ -11,12 +11,13 @@ model = SegResNet(
 )
 
 model = SwinUNETR(
+    img_size=(192, 192, 96),
     in_channels=4,
     out_channels=3,
 )
 
 inference = SlidingWindowInferer(
-    roi_size=(192, 192, 96),
+    roi_size=(240, 240, 160),
     sw_batch_size=1,
     overlap=0.5,
 )
